@@ -1,36 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My To-Do List</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My To-Do List</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<main class="app">
-  <h1>✅ My To-Do List</h1>
-  <p class="subtitle">Add tasks, tick them done, refresh - they stay saved!</p>
+  <!-- Pictures / Decorations on top -->
+  <div class="deco">📋 📅 ✏️ ⏰ ☕ 🌱 📌 ✅ 🎯</div>
 
-  <form id="task-form">
-    <input id="task-input" type="text" placeholder="What do you need to do?" autocomplete="off">
-    <button type="submit">Add Task</button>
-  </form>
+  <div class="app">
+    <h1>✨ My To-Do List ✨</h1>
+    <p class="subtitle">Stay focused, tick it off, feel good! 🌈</p>
 
-  <div class="filters">
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="active">Active</button>
-    <button class="filter-btn" data-filter="done">Done</button>
-    <button id="clear-completed">Clear Completed</button>
+    <!-- Picture Pills -->
+    <div class="pics">
+      <span>📋 Checklist</span>
+      <span>📅 Calendar</span>
+      <span>⏰ Time</span>
+      <span>☕ Focus</span>
+    </div>
+
+    <!-- Add Task Form -->
+    <form id="task-form">
+      <input type="text" id="task-input" placeholder="Add a new task..." required>
+      <button type="submit">+ Add Task</button>
+    </form>
+
+    <!-- Filters -->
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">☰ All</button>
+      <button class="filter-btn" data-filter="active">🕐 Active</button>
+      <button class="filter-btn" data-filter="done">✅ Done</button>
+      <button id="clear-completed">🗑️ Clear Completed</button>
+    </div>
+
+    <p id="task-count">0 tasks remaining</p>
+
+    <!-- Task List -->
+    <ul id="task-list"></ul>
+    <p id="empty-msg">No tasks yet. Add your first task above! 📝</p>
+
+    <!-- Bottom Pictures Banner -->
+    <div class="bottom-pics">📝 Stay Focused • ✅ Tick it off • 🌈 You got this!</div>
   </div>
 
-  <p id="task-count">0 tasks left</p>
-
-  <ul id="task-list"></ul>
-
-  <p id="empty-msg">No tasks yet. Add your first task above!</p>
-</main>
-
-<script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
