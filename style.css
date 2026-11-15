@@ -1,0 +1,44 @@
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 25%, #a18cd1 55%, #84fab0 100%);
+  background-attachment: fixed;
+  padding: 30px 15px;
+}
+
+/* Pictures / Decorations on top */
+.deco {
+  text-align: center; font-size: 28px; letter-spacing: 10px;
+  margin-bottom: 12px;
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+.app {
+  max-width: 560px; margin: 0 auto;
+  background: rgba(255,255,255,0.92);
+  border-radius: 28px;
+  padding: 28px 24px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+  border: 4px solid white;
+}
+
+h1 {
+  text-align: center; font-size: 32px;
+  background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #1dd1a1, #f368e0);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.subtitle { text-align: center; color: #666; margin: 8px 0 16px; font-size: 14px; }
+
+/* Picture Pills */
+.pics { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.pics span {
+  background: white; border: 2px solid #a29bfe; border-radius: 20px;
+  padding: 6px 12px; font-size: 13px; font-weight: bold;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+.pics span:nth-child(1){ background: #ffeaa7; }
+.pics span:nth-child(2){ background: #fab1a0; }
+.pics span:nth-child(3){ background: #a7f3d0; }
+.pics span
