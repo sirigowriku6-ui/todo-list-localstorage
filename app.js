@@ -1,88 +1,85 @@
-const form = document.getElementById('task-form');
-const input = document.getElementById('task-input');
-const list = document.getElementById('task-list');
-const countEl = document.getElementById('task-count');
-const emptyMsg = document.getElementById('empty-msg');
-const filterBtns = document.querySelectorAll('.filter-btn');
-const clearBtn = document.getElementById('clear-completed');
+var tasks = load();
+var list = document.getElementById('list');
+var form = document.getElementById('form');
+var input = document.getElementById('text');
+var currentFilter = 'all';
 
-let tasks = JSON.parse(localStorage.getItem('myTasks')) || [];
-let filter = 'all';
-
-function saveTasks() {
-  localStorage.setItem('myTasks', JSON.stringify(tasks));
+function load(){
+  try{
+    var data = JSON.parse(localStorage.getItem('tasks'));
+    if(Array.isArray(data)) return data;
+    return [];
+  }catch(e){ return []; }
 }
-
-function renderTasks() {
+function save(){
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+function render(){
   list.innerHTML = '';
-  let filtered = tasks;
-  if (filter === 'active') filtered = tasks.filter(t => !t.done);
-  if (filter === 'done') filtered = tasks.filter(t => t.done);
-
-  if (filtered.length === 0) {
-    emptyMsg.style.display = 'block';
-    if (tasks.length === 0) emptyMsg.textContent = 'No tasks yet. Add your first task above! 📝';
-    else emptyMsg.textContent = 'No tasks in this filter! 🎉';
-  } else {
-    emptyMsg.style.display = 'none';
-  }
-
-  filtered.forEach((task) => {
-    const li = document.createElement('li');
-    li.className = 'task-item' + (task.done ? ' done' : '');
-    const span = document.createElement('span');
-    span.className = 'task-text';
-    span.textContent = task.text;
-    const doneBtn = document.createElement('button');
-    doneBtn.className = 'done-btn';
-    doneBtn.textContent = task.done ? '↩ Undo' : '✓ Done';
-    doneBtn.onclick = () => {
-      task.done = !task.done;
-      saveTasks();
-      renderTasks();
-    };
-    const delBtn = document.createElement('button');
-    delBtn.className = 'delete-btn';
-    delBtn.textContent = '🗑️';
-    delBtn.onclick = () => {
-      tasks = tasks.filter(t => t !== task);
-      saveTasks();
-      renderTasks();
-    };
-    li.appendChild(span);
-    li.appendChild(doneBtn);
-    li.appendChild(delBtn);
-    list.appendChild(li);
+  var shown = tasks.filter(function(t){
+    if(currentFilter==='active') return !t.done;
+    if(currentFilter==='done') return t.done;
+    return true;
   });
+  var empty = document.getElementById('empty');
+  if(empty) empty.style.display = shown.length ? 'none' : 'block';
 
-  const remaining = tasks.filter(t => !t.done).length;
-  countEl.textContent = remaining + ' tasks remaining • ' + tasks.length + ' total';
+  shown.forEach(function(t){
+    var li = document.createElement('li');
+    if(t.done) li.className = 'done';
+    var label = document.createElement('span');
+    label.textContent = t.text;
+    var toggle = document.createElement('button');
+    toggle.textContent = t.done ? 'Undo' : 'Done';
+    toggle.dataset.action = 'toggle';
+    var del = document.createElement('button');
+    del.textContent = 'Delete ❌';
+    del.dataset.action = 'delete';
+    li.append(label, toggle, del);
+    li.dataset.id = t.id;
+    list.append(li);
+  });
+  var remaining = tasks.filter(function(t){ return !t.done; }).length;
+  var count = document.getElementById('count');
+  if(count) count.textContent = remaining + ' tasks remaining • ' + tasks.length + ' total';
 }
 
-form.addEventListener('submit', (e) => {
+form.addEventListener('submit', function(e){
   e.preventDefault();
-  const text = input.value.trim();
-  if (text === '') return;
-  tasks.push({ text: text, done: false });
-  saveTasks();
-  renderTasks();
+  var text = input.value.trim();
+  if(!text) return;
+  tasks.push({ id: Date.now(), text: text, done: false });
   input.value = '';
-  input.focus();
+  save(); render();
 });
 
-filterBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    filterBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    filter = btn.dataset.filter;
-    renderTasks();
+// Event Delegation - ONE listener for Toggle + Delete
+list.addEventListener('click', function(e){
+  var action = e.target.dataset.action;
+  if(!action) return;
+  var id = Number(e.target.closest('li').dataset.id);
+  if(action === 'delete'){
+    tasks = tasks.filter(function(t){ return t.id !== id; });
+  }
+  if(action === 'toggle'){
+    tasks.forEach(function(t){ if(t.id === id) t.done = !t.done; });
+  }
+  save(); render();
+});
+
+var filters = document.querySelector('.filters');
+if(filters){
+  filters.addEventListener('click', function(e){
+    if(e.target.dataset.filter){
+      currentFilter = e.target.dataset.filter;
+      document.querySelectorAll('.filters button[data-filter]').forEach(function(b){ b.classList.remove('active'); });
+      e.target.classList.add('active');
+      render();
+    }
+    if(e.target.id === 'clearBtn'){
+      tasks = tasks.filter(function(t){ return !t.done; });
+      save(); render();
+    }
   });
-});
-
-clearBtn.addEventListener('click', () => {
-  tasks = tasks.filter(t => !t.done);
-  saveTasks();
-  renderTasks();
-});
-
-renderTasks();
+}
+render();
